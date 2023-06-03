@@ -36,7 +36,7 @@ const Button: React.FC<ButtonProps> = ({
         ${outline ? 'text-black' : 'text-white'}
         ${small ? 'py-1' : 'py-3'}
         ${small ? 'text-sm' : 'text-md'}
-        ${small ? 'font-semibold' : 'font-light'}
+        ${small ? 'font-light' : 'font-bold'}
         ${small ? 'border-[0.063rem]' : 'border-2'}
   `}
     >
