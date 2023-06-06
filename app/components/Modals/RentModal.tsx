@@ -7,7 +7,10 @@ import useRentModal from '@/app/hooks/useRentModal'
 import { categories } from '../Navbar/Categories'
 
 import CategoryInput from '../Inputs/CategoryInput'
+import CountrySelect from '../Inputs/CountrySelect'
+
 import { FieldValues, useForm } from 'react-hook-form'
+import dynamic from 'next/dynamic'
 
 // ? This modal has several steps we can map with an enum
 
@@ -48,6 +51,12 @@ const RentModal = () => {
   })
 
   const category = watch('category')
+  const location = watch('location')
+
+  const Map = useMemo(
+    () => dynamic(() => import('../Map'), { ssr: false }),
+    [location]
+  )
 
   // ? react-hook-form does not refresh automatically!!
   const setCustomValue = (id: string, value: any) => {
@@ -112,11 +121,31 @@ const RentModal = () => {
     </div>
   )
 
+  if (step === STEPS.LOCATION) {
+    bodyContent = (
+      <div
+        className="
+      flex flex-col gap-8
+    "
+      >
+        <Heading
+          title="Where is your place located"
+          subtitle="Help guests find you"
+        />
+        <CountrySelect
+          value={location}
+          onChange={(value) => setCustomValue('location', value)}
+        />
+        <Map center={location?.latlng} />
+      </div>
+    )
+  }
+
   return (
     <Modal
       title="Aribnb your home"
       onClose={rentModal.onClose}
-      onSubmit={rentModal.onClose}
+      onSubmit={onNext}
       actionLabel={actionLabel}
       secondaryActionLabel={secondaryActionLabel}
       secondaryAction={step === STEPS.CATEGORY ? undefined : onBack}
